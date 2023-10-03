@@ -96,4 +96,14 @@ trait FileManagerTrait
     {
         return $this->getData('ext');
     }
+
+    public function setSize(int $size): static
+    {
+        return $this->setData('size', $size);
+    }
+
+    public function getSize(): string
+    {
+        return $this->getData('size');
+    }
 }

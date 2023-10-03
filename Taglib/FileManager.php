@@ -49,6 +49,7 @@ class FileManager implements TaglibInterface
             'multi' => false,
             'w' => false,
             'h' => false,
+            'size' => false,
         ];
     }
 
@@ -131,6 +132,7 @@ class FileManager implements TaglibInterface
                 ->setWidth($attributes['w'] ?? 50)
                 ->setHeight($attributes['h'] ?? 50)
                 ->setExt($attributes['ext'] ?? '*')
+                ->setSize($attributes['size'] ?? '102400')
                 ->setVars($attributes['vars'] ?? '');
             $result = $fileManager->setData(
                 ['tag_key' => $tag_key,
