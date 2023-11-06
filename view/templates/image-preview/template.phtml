@@ -116,11 +116,7 @@
             }
             urls += imgs[i].getAttribute('data-src')
         }
-        $('#{{target}}').val(urls)
-        // let items = $('#{{target}}-preview').find('.drag-item')
-        // for (let i = 0; i < items.length; i++) {
-        //     items[i].setAttribute('style', 'width: {{width | 50}}px;height: {{height | 50}}px;')
-        // }
+        $('#{{target}}').val(urls).trigger('change').trigger('input')
     }
 
     flushSelectedImage()
