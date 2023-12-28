@@ -2,6 +2,7 @@
 
 namespace Weline\FileManager\Block;
 
+use Weline\FileManager\FileManagerInterface;
 use Weline\FileManager\Helper\Image;
 use Weline\Framework\View\Block;
 

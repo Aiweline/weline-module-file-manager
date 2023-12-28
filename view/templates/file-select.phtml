@@ -19,7 +19,7 @@
                         aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0">
-                <iframe id="{{target}}-elfinder-iframe" class="w-100" src="" scrolling="no"
+                <iframe id="{{target}}-file-manager-iframe" class="w-100" src="" scrolling="no"
                         frameborder="0"></iframe>
             </div>
         </div><!-- /.modal-content -->
@@ -28,13 +28,13 @@
 <script>
     var timer = null;
     $('#{{target}}-select-modal').on('shown.bs.modal', () => {
-        let iframe = $("#{{target}}-elfinder-iframe");
+        let iframe = $("#{{target}}-file-manager-iframe");
         if (iframe.attr('src') === '') {
             iframe.attr('src', '{{connector}}')
         }
 
         function checkIframeLoaded() {
-            let iframe = $("#{{target}}-elfinder-iframe");
+            let iframe = $("#{{target}}-file-manager-iframe");
             // Get a handle to the iframe element
             // console.log(iframe)
             let iframeDoc = iframe[0].contentDocument || undefined;
@@ -60,7 +60,7 @@
     // 点击预览
     $('#{{target}}-preview').on('click', '.img', function () {
         let url = $(this).data('url')
-        let iframe = $("#{{target}}-elfinder-iframe");
+        let iframe = $("#{{target}}-file-manager-iframe");
         iframe.attr('src', url)
     })
 </script>

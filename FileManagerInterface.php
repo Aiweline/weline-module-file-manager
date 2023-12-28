@@ -11,4 +11,6 @@ interface FileManagerInterface
      * @return string
      */
     public function render(): string;
+
+    public function getConnector(array $params = []):string;
 }

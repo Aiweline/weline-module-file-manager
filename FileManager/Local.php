@@ -16,4 +16,9 @@ class Local extends FileManager
         return '暂无文件管理器。推荐安装WelineFramework框架Elfinder文件管理器模块。composer require weline/module-el-finder-file-manager';
     }
 
+    public function getConnector(array $params = []):string
+    {
+        return '';
+    }
+
 }
