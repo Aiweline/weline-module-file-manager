@@ -76,7 +76,7 @@ class FileManagerConnector implements TaglibInterface
     {
         return function ($tag_key, $config, $tag_data, $attributes) {
             if(empty($attributes)){
-                $input = "target='#111', title='文件管理器', var='store', path='store/logo', value='store.logo', multi='0', ext='jpg,png,gif,webp', w='50', h='50'";
+                $input = $tag_data[1]??'';
                 $pattern = '/(\w+)\s*=\s*[\'"]?([^\'"]*)[\'"]?/';
                 preg_match_all($pattern, $input, $matches);
                 $outputArray = array();
@@ -131,11 +131,8 @@ class FileManagerConnector implements TaglibInterface
                     $fileManager = $fileManagers[$userConfigFileManager];
                 }
             }
-            if (!isset($attributes['target'])) {
-                throw new \Exception(__('缺少目标ID。文档：%1', self::document()));
-            }
             $fileManager
-                ->setTarget(trim($attributes['target'], '.#'))
+                ->setTarget(trim($attributes['target']??'', '.#'))
                 ->setPath($attributes['path'] ?? '')
                 ->setValue($attributes['value'] ?? '')
                 ->setTitle($attributes['title'] ?? '')
