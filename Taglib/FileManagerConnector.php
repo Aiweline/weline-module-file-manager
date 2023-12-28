@@ -40,7 +40,7 @@ class FileManagerConnector implements TaglibInterface
     public static function attr(): array
     {
         return [
-            'target' => true,
+            'target' => false,
             'title' => false,
             'path' => true,
             'ext' => true,
@@ -188,12 +188,12 @@ class FileManagerConnector implements TaglibInterface
 使用方法：
 {$doc}
 参数解释：
-target：目标容器id【选择文件后会根据id回填到属性value上】
+target：可选【必须链接到URL上】。文件管理器回填目标。
 ext：必选。默认jpg,png,gif,webp格式
+path：必选。默认打开的文件路径
 title：可选。文件管理器标题
-path：可选。默认打开的文件路径
-vars：当前变量
-value：默认当前的文件路径
+vars：可选。当前变量
+value：可选。默认当前的文件路径
 multi：可选。默认单选
 w：可选。默认预览宽50px
 h：可选。默认预览高50px
