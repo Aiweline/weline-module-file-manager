@@ -76,7 +76,7 @@ class FileManagerConnector implements TaglibInterface
     {
         return function ($tag_key, $config, $tag_data, $attributes) {
             if(empty($attributes)){
-                $input = $tag_data[1]??'';
+                $input = str_replace(',', '', $tag_data[1]??'');
                 $pattern = '/(\w+)\s*=\s*[\'"]?([^\'"]*)[\'"]?/';
                 preg_match_all($pattern, $input, $matches);
                 $outputArray = array();
@@ -85,7 +85,6 @@ class FileManagerConnector implements TaglibInterface
                 }
                 $attributes = array_merge($outputArray, $attributes);
             }
-
             # 检查是否有配置默认的文件管理器
             $userConfigFileManager = ObjectManager::getInstance(BackendUserConfig::class)->getConfig('file_manager') ?: 'local';
             $cacheKey = json_encode(func_get_args()) . $userConfigFileManager;
@@ -131,23 +130,21 @@ class FileManagerConnector implements TaglibInterface
                     $fileManager = $fileManagers[$userConfigFileManager];
                 }
             }
-            $fileManager
-                ->setTarget(trim($attributes['target']??'', '.#'))
-                ->setPath($attributes['path'] ?? '')
-                ->setValue($attributes['value'] ?? '')
-                ->setTitle($attributes['title'] ?? '')
-                ->setMulti($attributes['multi'] ?? '')
-                ->setWidth($attributes['w'] ?? 50)
-                ->setHeight($attributes['h'] ?? 50)
-                ->setExt($attributes['ext'] ?? '*')
-                ->setSize($attributes['size'] ?? '102400')
-                ->setVars($attributes['vars'] ?? '');
-            $result = $fileManager->setData(
-                ['tag_key' => $tag_key,
-                    'tag_data' => $tag_data,
-                    'attributes' => $attributes
-                ]
-            )->getConnector();
+            $params = [
+                'startPath' => $attributes['path'] ?? '',
+                'ext' => $attributes['ext'] ?? '',
+                'value' => $attributes['value'] ?? '',
+                'vars' => $attributes['vars'] ?? '',
+                'multi' => $attributes['multi'] ?? '',
+                'w' => $attributes['w'] ?? 50,
+                'h' => $attributes['h'] ?? 50,
+                'size' => $attributes['size'] ?? '',
+                'title' => $attributes['title'] ?? '',
+            ];
+            if(isset($attributes['target'])){
+                $params['targetElement'] = trim($attributes['target']??'', '.#');
+            }
+            $result = $fileManager->getConnector($params);
             $cache->set($cacheKey, $result);
             return $result;
         };
@@ -172,13 +169,13 @@ class FileManagerConnector implements TaglibInterface
     public static function document(): string
     {
         $doc = htmlentities(
-            "<file-manager-cpnnector>target='#demo',title='文件管理器',var='store',path='store/logo',value='store.logo',multi='0',ext='jpg,png,gif,webp',w='50',h='50'</file-manager-cpnnector>
+            "<file-manager-cpnnector>target='#demo' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'</file-manager-cpnnector>
             或者<br>
-            @file-manager-cpnnector{target='#demo',title='文件管理器',var='store',path='store/logo',value='store.logo',multi='0',ext='jpg,png,gif,webp',w='50',h='50'}
+            @file-manager-cpnnector{target='#demo' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'}
             或者<br>
             <file-manager-cpnnector target='#demo' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'/>
             或者<br>
-            @file-manager-cpnnector(target='#demo',title='文件管理器',var='store',path='store/logo',value='store.logo',multi='0',ext='jpg,png,gif,webp',w='50',h='50')
+            @file-manager-cpnnector(target='#demo' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50')
             "
         );
         return <<<HTML
