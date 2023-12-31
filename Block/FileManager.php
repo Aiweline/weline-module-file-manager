@@ -23,7 +23,7 @@ class FileManager extends Block
     {
         return [
             'isIframe' => true,
-            'targetElement' => $this->getData('target'),
+            'target' => $this->getData('target'),
             'startPath' => $this->getData('path'),
             'multi' => $this->getData('multi'),
             'ext' => $this->getData('ext'),
