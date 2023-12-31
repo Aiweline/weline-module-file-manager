@@ -75,8 +75,8 @@ class FileManagerConnector implements TaglibInterface
     public static function callback(): callable
     {
         return function ($tag_key, $config, $tag_data, $attributes) {
-            if(empty($attributes)){
-                $input = str_replace(',', '', $tag_data[1]??'');
+            if (empty($attributes)) {
+                $input   = str_replace(',', '', $tag_data[1] ?? '');
                 $pattern = '/(\w+)\s*=\s*[\'"]?([^\'"]*)[\'"]?/';
                 preg_match_all($pattern, $input, $matches);
                 $outputArray = array();
@@ -85,19 +85,23 @@ class FileManagerConnector implements TaglibInterface
                 }
                 $attributes = array_merge($outputArray, $attributes);
             }
-            # 检查是否有配置默认的文件管理器
-            $userConfigFileManager = ObjectManager::getInstance(BackendUserConfig::class)->getConfig('file_manager') ?: 'local';
+            if (!empty($attributes['code'])) {
+                $userConfigFileManager = $attributes['code'];
+            } else {
+                # 检查是否有配置默认的文件管理器
+                $userConfigFileManager = ObjectManager::getInstance(BackendUserConfig::class)->getConfig('file_manager') ?: 'local';
+            }
             $cacheKey = json_encode(func_get_args()) . $userConfigFileManager;
             /**@var CacheInterface $cache */
-            $cache = ObjectManager::getInstance(FileManagerCacheFactory::class);
+            $cache  = ObjectManager::getInstance(FileManagerCacheFactory::class);
             $result = $cache->get($cacheKey);
             if ($result and ($userConfigFileManager !== 'local')) {
                 return $result;
             }
             /**@var Scan $fileScan $ */
-            $fileScan = ObjectManager::getInstance(Scan::class);
+            $fileScan     = ObjectManager::getInstance(Scan::class);
             $fileManagers = [];
-            $modules = Env::getInstance()->getActiveModules();
+            $modules      = Env::getInstance()->getActiveModules();
             foreach ($modules as $module) {
                 $files = [];
                 $fileScan->globFile(
@@ -121,10 +125,11 @@ class FileManagerConnector implements TaglibInterface
                 $fileManager = array_pop($fileManagers);
             } else {
                 if (!isset($fileManagers[$userConfigFileManager])) {
-                    ObjectManager::getInstance(MessageManager::class)->addWarning(__('配置的文件管理器不存在! 文件管理器名：%1', $userConfigFileManager));
+                    ObjectManager::getInstance(MessageManager::class)->addWarning(__('所指定的文件管理器不存在! 文件管理器名：%1', $userConfigFileManager));
                     # 使用第一个文件管理器作为默认的文件管理器
                     /**@var \Weline\FileManager\FileManager $fileManager */
-                    $fileManager = array_shift($fileManagers);
+                    $fileManager = array_pop($fileManagers);
+                    ObjectManager::getInstance(MessageManager::class)->addWarning(__('使用：%1 文件管理器代替。', $fileManager::name()));
                 } else {
                     /**@var \Weline\FileManager\FileManager $fileManager */
                     $fileManager = $fileManagers[$userConfigFileManager];
@@ -135,14 +140,13 @@ class FileManagerConnector implements TaglibInterface
                 'ext' => $attributes['ext'] ?? '',
                 'value' => $attributes['value'] ?? '',
                 'vars' => $attributes['vars'] ?? '',
-                'multi' => $attributes['multi'] ?? '',
                 'w' => $attributes['w'] ?? 50,
                 'h' => $attributes['h'] ?? 50,
                 'size' => $attributes['size'] ?? '',
-                'title' => $attributes['title'] ?? '',
+                'title' => $attributes['title'] ?? ''
             ];
-            if(isset($attributes['target'])){
-                $params['targetElement'] = trim($attributes['target']??'', '.#');
+            if (isset($attributes['multi'])) {
+                $params['multi'] = $attributes['multi'];
             }
             $result = $fileManager->getConnector($params);
             $cache->set($cacheKey, $result);
@@ -169,20 +173,21 @@ class FileManagerConnector implements TaglibInterface
     public static function document(): string
     {
         $doc = htmlentities(
-            "<file-manager-cpnnector>target='#demo' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'</file-manager-cpnnector>
+            "<file-manager-cpnnector>target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'></file-manager-cpnnector>
             或者<br>
-            @file-manager-cpnnector{target='#demo' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'}
+            @file-manager-cpnnector{target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'}
             或者<br>
-            <file-manager-cpnnector target='#demo' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'/>
+            <file-manager-cpnnector target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'/>
             或者<br>
-            @file-manager-cpnnector(target='#demo' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50')
+            @file-manager-cpnnector(target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50')
             "
         );
         return <<<HTML
 使用方法：
 {$doc}
 参数解释：
-target：可选【必须链接到URL上】。文件管理器回填目标。
+target：可选【必须链接到URL上】。文件管理器回填目标ID。
+close: 可选【必须链接到URL上】。文件管理器关闭按钮ID。
 ext：必选。默认jpg,png,gif,webp格式
 path：必选。默认打开的文件路径
 title：可选。文件管理器标题

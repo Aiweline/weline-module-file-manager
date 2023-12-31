@@ -15,6 +15,7 @@ use Weline\Framework\System\File\Io\File;
 use Weline\Framework\System\File\Scan;
 use Weline\Framework\System\ModuleFileReader;
 use Weline\Taglib\TaglibInterface;
+use function PHPUnit\Framework\stringStartsWith;
 
 class FileManager implements TaglibInterface
 {
@@ -75,8 +76,12 @@ class FileManager implements TaglibInterface
     public static function callback(): callable
     {
         return function ($tag_key, $config, $tag_data, $attributes) {
-            # 检查是否有配置默认的文件管理器
-            $userConfigFileManager = ObjectManager::getInstance(BackendUserConfig::class)->getConfig('file_manager') ?: 'local';
+            if (!empty($attributes['code'])) {
+                $userConfigFileManager = $attributes['code'];
+            } else {
+                # 检查是否有配置默认的文件管理器
+                $userConfigFileManager = ObjectManager::getInstance(BackendUserConfig::class)->getConfig('file_manager') ?: 'local';
+            }
             $cacheKey = json_encode(func_get_args()) . $userConfigFileManager;
             /**@var CacheInterface $cache */
             $cache = ObjectManager::getInstance(FileManagerCacheFactory::class);
@@ -111,10 +116,11 @@ class FileManager implements TaglibInterface
                 $fileManager = array_pop($fileManagers);
             } else {
                 if (!isset($fileManagers[$userConfigFileManager])) {
-                    ObjectManager::getInstance(MessageManager::class)->addWarning(__('配置的文件管理器不存在! 文件管理器名：%1', $userConfigFileManager));
+                    ObjectManager::getInstance(MessageManager::class)->addWarning(__('所指定的文件管理器不存在! 文件管理器名：%1', $userConfigFileManager));
                     # 使用第一个文件管理器作为默认的文件管理器
                     /**@var \Weline\FileManager\FileManager $fileManager */
-                    $fileManager = array_shift($fileManagers);
+                    $fileManager = array_pop($fileManagers);
+                    ObjectManager::getInstance(MessageManager::class)->addWarning(__('使用：%1 文件管理器代替。', $fileManager::name()));
                 } else {
                     /**@var \Weline\FileManager\FileManager $fileManager */
                     $fileManager = $fileManagers[$userConfigFileManager];
@@ -123,8 +129,11 @@ class FileManager implements TaglibInterface
             if (!isset($attributes['target'])) {
                 throw new \Exception(__('缺少目标ID。文档：%1', self::document()));
             }
+            if(str_starts_with($attributes['target'],'.')) {
+                throw new \Exception(__('缺少目标ID。请使用ID选择器，例如：target="#id"。文档：%1', self::document()));
+            }
             $fileManager
-                ->setTarget(trim($attributes['target'], '.#'))
+                ->setTarget(trim($attributes['target'], '#'))
                 ->setPath($attributes['path'] ?? '')
                 ->setValue($attributes['value'] ?? '')
                 ->setTitle($attributes['title'] ?? '')
@@ -165,7 +174,7 @@ class FileManager implements TaglibInterface
     {
         $doc = htmlentities(
             "<file-manager 
-                        target='#demo' 
+                        target='#demo'
                         title='文件管理器' 
                         var='store' 
                         path='store/logo' 
