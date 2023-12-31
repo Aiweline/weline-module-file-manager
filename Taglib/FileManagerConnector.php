@@ -40,7 +40,9 @@ class FileManagerConnector implements TaglibInterface
     public static function attr(): array
     {
         return [
+            'code' => false,
             'target' => false,
+            'close' => false,
             'title' => false,
             'path' => true,
             'ext' => true,
@@ -173,19 +175,20 @@ class FileManagerConnector implements TaglibInterface
     public static function document(): string
     {
         $doc = htmlentities(
-            "<file-manager-cpnnector>target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'></file-manager-cpnnector>
+            "<file-manager-cpnnector>code='local' target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'></file-manager-cpnnector>
             或者<br>
-            @file-manager-cpnnector{target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'}
+            @file-manager-cpnnector{code='local' target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'}
             或者<br>
             <file-manager-cpnnector target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50'/>
             或者<br>
-            @file-manager-cpnnector(target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50')
+            @file-manager-cpnnector(code='local' target='#demo' close='#close' title='文件管理器' var='store' path='store/logo' value='store.logo' multi='0' ext='jpg,png,gif,webp' w='50' h='50')
             "
         );
         return <<<HTML
 使用方法：
 {$doc}
 参数解释：
+code: 可选, 指定编辑器代码。例如：local
 target：可选【必须链接到URL上】。文件管理器回填目标ID。
 close: 可选【必须链接到URL上】。文件管理器关闭按钮ID。
 ext：必选。默认jpg,png,gif,webp格式

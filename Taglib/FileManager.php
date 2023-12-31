@@ -41,6 +41,7 @@ class FileManager implements TaglibInterface
     public static function attr(): array
     {
         return [
+            'code' => false,
             'title' => true,
             'target' => true,
             'path' => true,
@@ -174,6 +175,7 @@ class FileManager implements TaglibInterface
     {
         $doc = htmlentities(
             "<file-manager 
+                        code='local'
                         target='#demo'
                         title='文件管理器' 
                         var='store' 
@@ -189,6 +191,7 @@ class FileManager implements TaglibInterface
 使用方法：
 {$doc}
 参数解释：
+code：可选,指定安装的编辑器代码。例如：local
 target：目标容器id【选择文件后会根据id回填到属性value上】
 ext：必选。默认jpg,png,gif,webp格式
 title：可选。文件管理器标题
