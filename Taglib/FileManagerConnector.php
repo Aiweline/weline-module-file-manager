@@ -41,7 +41,7 @@ class FileManagerConnector implements TaglibInterface
     {
         return [
             'code' => false,
-            'target' => false,
+            'target' => true,
             'close' => false,
             'title' => false,
             'path' => true,
@@ -77,15 +77,18 @@ class FileManagerConnector implements TaglibInterface
     public static function callback(): callable
     {
         return function ($tag_key, $config, $tag_data, $attributes) {
-            if (empty($attributes)) {
-                $input   = str_replace(',', '', $tag_data[1] ?? '');
+            if(empty($attributes)){
+                $input   = $tag_data[1];
                 $pattern = '/(\w+)\s*=\s*[\'"]?([^\'"]*)[\'"]?/';
                 preg_match_all($pattern, $input, $matches);
                 $outputArray = array();
                 foreach ($matches[1] as $index => $match) {
                     $outputArray[$match] = $matches[2][$index];
                 }
-                $attributes = array_merge($outputArray, $attributes);
+                $attributes = $outputArray;
+            }
+            if(empty($attributes['target'])) {
+                throw new \Exception(__('缺少target属性, 请检查,参考: %1',self::document()));
             }
             if (!empty($attributes['code'])) {
                 $userConfigFileManager = $attributes['code'];
@@ -137,20 +140,18 @@ class FileManagerConnector implements TaglibInterface
                     $fileManager = $fileManagers[$userConfigFileManager];
                 }
             }
-            $params = [
-                'startPath' => $attributes['path'] ?? '',
-                'ext' => $attributes['ext'] ?? '',
-                'value' => $attributes['value'] ?? '',
-                'vars' => $attributes['vars'] ?? '',
-                'w' => $attributes['w'] ?? 50,
-                'h' => $attributes['h'] ?? 50,
-                'size' => $attributes['size'] ?? '',
-                'title' => $attributes['title'] ?? ''
-            ];
-            if (isset($attributes['multi'])) {
-                $params['multi'] = $attributes['multi'];
-            }
-            $result = $fileManager->getConnector($params);
+            $attributes['startPath'] = $attributes['path'] ?? '';
+            $attributes['target'] = trim($attributes['target'],'.#');
+            $attributes['close'] = trim($attributes['close'] ?? '','.#');
+            $attributes['ext'] = $attributes['ext'] ?? '';
+            $attributes['value'] = $attributes['value'] ?? '';
+            $attributes['vars'] = $attributes['vars'] ?? '';
+            $attributes['w'] = $attributes['w'] ?? 50;
+            $attributes['h'] = $attributes['h'] ?? 50;
+            $attributes['size'] = $attributes['size'] ?? '';
+            $attributes['title'] = $attributes['title'] ?? '';
+            $attributes['multi'] = $attributes['multi'] ?? '';
+            $result = $fileManager->getConnector($attributes);
             $cache->set($cacheKey, $result);
             return $result;
         };
