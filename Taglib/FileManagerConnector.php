@@ -138,7 +138,12 @@ class FileManagerConnector implements TaglibInterface
                 }
             }
             $attributes['startPath'] = $attributes['path'] ?? '';
-            $attributes['target'] = trim($attributes['target'],'.#');
+            if(isset($attributes['target'])){
+                $attributes['target'] = trim($attributes['target'],'.#');
+            }
+            if(isset($attributes['close'])){
+                $attributes['close'] = trim($attributes['close'],'.#');
+            }
             $attributes['close'] = trim($attributes['close'] ?? '','.#');
             $attributes['ext'] = $attributes['ext'] ?? '';
             $attributes['value'] = $attributes['value'] ?? '';
@@ -147,7 +152,7 @@ class FileManagerConnector implements TaglibInterface
             $attributes['h'] = $attributes['h'] ?? 50;
             $attributes['size'] = $attributes['size'] ?? '';
             $attributes['title'] = $attributes['title'] ?? '';
-            $attributes['multi'] = $attributes['multi'] ?? '';
+            $attributes['multi'] = $attributes['multi'] ?? '0';
             $result = $fileManager->getConnector($attributes);
             $cache->set($cacheKey, $result);
             return $result;
