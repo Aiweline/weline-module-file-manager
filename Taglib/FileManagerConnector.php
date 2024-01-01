@@ -41,7 +41,7 @@ class FileManagerConnector implements TaglibInterface
     {
         return [
             'code' => false,
-            'target' => true,
+            'target' => false,
             'close' => false,
             'title' => false,
             'path' => true,
@@ -86,9 +86,6 @@ class FileManagerConnector implements TaglibInterface
                     $outputArray[$match] = $matches[2][$index];
                 }
                 $attributes = $outputArray;
-            }
-            if(empty($attributes['target'])) {
-                throw new \Exception(__('缺少target属性, 请检查,参考: %1',self::document()));
             }
             if (!empty($attributes['code'])) {
                 $userConfigFileManager = $attributes['code'];
