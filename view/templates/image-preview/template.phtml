@@ -69,7 +69,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" id="{{target}}-zoom-close-modal"
                         aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="zoom-preview-image-body">
+            <div class="modal-body" id="{{target}}-zoom-preview-image-body">
                 <img src="" alt="" title="">
             </div>
         </div><!-- /.modal-content -->
@@ -124,7 +124,7 @@
     $('#{{target}}-preview').on('click', 'img', function () {
         let src = '/pub/media/' + $(this).attr('data-src');
         let zoomModal = $('#{{target}}-zoom-modal');
-        let zoomPreviewImageBody = $('#zoom-preview-image-body');
+        let zoomPreviewImageBody = $('#{{target}}-zoom-preview-image-body');
         zoomPreviewImageBody.empty()
         zoomPreviewImageBody.append(`<img src="${src}" class="img-fluid" alt="">`)
         zoomModal.modal('show')
