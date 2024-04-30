@@ -1248,9 +1248,9 @@ class MimeTypes
 
     static function getMimeTypes(string $ext = '')
     {
-        if ($ext == '') {
+        if ($ext == '*' || $ext == '') {
             return self::$mime_types;
         }
-        return self::$mime_types[$ext] ?? '';
+        return self::$mime_types[$ext] ?? [];
     }
 }
