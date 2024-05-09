@@ -37,6 +37,7 @@ class File implements EavModelInterface
         ];
         $attr = array_merge($defaults, $attrs);
         $id = str_replace('#', '', $attr['target']);
+        $title = $attr['title'];
         $func = FileManager::callback();
         $params = [
             'file-manager', [], [], $attr
@@ -52,6 +53,6 @@ class File implements EavModelInterface
         $res = str_replace('?>', '', $res);
         ob_start();
         eval($res);
-        return '<input '.$attr_string.' type="hidden" name="' . $type->getCode() . '" value="' . $value . '" id="' . $id. '">'.ob_get_clean();
+        return '<label class="'.$label_class.'" for="' . $id.'">'.$title.'</label><input '.$attr_string.' type="hidden" name="' . $type->getCode() . '" value="' . $value . '" id="' . $id. '">'.ob_get_clean();
     }
 }
