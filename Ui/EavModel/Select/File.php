@@ -23,23 +23,15 @@ class File implements EavModelInterface
 
     function getHtml(EavAttribute\Type &$type, mixed &$value, string &$label_class, array &$attrs, array &$option_items = []): string
     {
-        $defaults = [
+        $defaults    = [
             'target' => '#' . $type->getCode() . '-file',
-            'var' => '',
-            'path' => 'media/uploader/',
             'value' => $value,
-            'title' => '从文件管理器选择',
-            'multi' => '0',
-            'ext' => 'xls,xlsx',
-            'w' => '50',
-            'h' => '50',
-            'size' => '102400',
         ];
-        $attr = array_merge($defaults, $attrs);
-        $id = str_replace('#', '', $attr['target']);
-        $title = $attr['title'];
-        $func = FileManager::callback();
-        $params = [
+        $attr        = array_merge($this->getModelData(), $defaults, $attrs);
+        $id          = str_replace('#', '', $attr['target']);
+        $title       = $attr['title'];
+        $func        = FileManager::callback();
+        $params      = [
             'file-manager', [], [], $attr
         ];
         $attr_string = '';
@@ -53,6 +45,20 @@ class File implements EavModelInterface
         $res = str_replace('?>', '', $res);
         ob_start();
         eval($res);
-        return '<label class="'.$label_class.'" for="' . $id.'">'.$title.'</label><input '.$attr_string.' type="hidden" name="' . $type->getCode() . '" value="' . $value . '" id="' . $id. '">'.ob_get_clean();
+        return '<label class="' . $label_class . '" for="' . $id . '">' . $title . '</label><input ' . $attr_string . ' type="hidden" name="' . $type->getCode() . '" value="' . $value . '" id="' . $id . '">' . ob_get_clean();
+    }
+
+    public function getModelData(): mixed
+    {
+        return [
+            'var' => '',
+            'path' => 'media/uploader/',
+            'title' => '从文件管理器选择',
+            'multi' => '0',
+            'ext' => 'xls,xlsx',
+            'w' => '50',
+            'h' => '50',
+            'size' => '102400',
+        ];
     }
 }
