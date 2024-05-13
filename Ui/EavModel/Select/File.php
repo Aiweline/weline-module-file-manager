@@ -49,9 +49,9 @@ class File implements EavModelInterface
         $download      = '';
         if ($value) {
             $file_name = basename($value);
-            $download  = '<a title="' . __("点击下载") . '" href="' . $value . '" download>' . $file_name . '</a>';
+            $download  = __('已选:') .'<a title="' . __("点击下载") . '" href="' . $value . '" download>' . $file_name . '</a>';
         }
-        return '<label class="' . $label_class . '" for="' . $id . '">' . $title . '  ' . __('已选文件:') . $download . '</label><input ' . $attr_string . '  name="' . $type->getCode() . '" value="' . $value . '" id="' . $id . '" ' . $frontendAttrs . ' type="text" >' . ob_get_clean();
+        return '<label class="' . $label_class . '" for="' . $id . '">' . $title . '  ' .  $download . '</label><input ' . $attr_string . '  name="' . $type->getCode() . '" value="' . $value . '" id="' . $id . '" ' . $frontendAttrs . ' type="text" >' . ob_get_clean();
     }
 
     public function getModelData(): mixed
