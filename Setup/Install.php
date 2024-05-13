@@ -32,7 +32,7 @@ class Install implements InstallInterface
         $type = ObjectManager::getInstance(Type::class);
         $type->setFieldType(TableInterface::column_type_VARCHAR)
             ->setCode('select_file')
-            ->setFrontendAttrs('type="file" data-parsley-minlength="3" required')
+            ->setFrontendAttrs('type="text" data-parsley-minlength="3" required')
             ->setFieldLength(255)
             ->setIsSwatch(false)
             ->setElement('input')
