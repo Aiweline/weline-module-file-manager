@@ -33,7 +33,7 @@ class File implements EavModelInterface
         unset($attrs['code']);
         $attr    = array_merge($this->getModelData(), $defaults, $attrs);
         $id      = str_replace('#', '', $attr['target']);
-        $title   = $attr['title'];
+        $title   = $attribute->getName();
         $func    = FileManager::callback();
         $attrStr = '';
         foreach ($attr as $key => &$attr_val) {
