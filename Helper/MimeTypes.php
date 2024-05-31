@@ -1249,7 +1249,11 @@ class MimeTypes
     static function getMimeTypes(string $ext = '')
     {
         if ($ext == '*' || $ext == '') {
-            return self::$mime_types;
+            $all = [];
+            foreach (self::$mime_types as $mimeType) {
+                $all = array_merge($all, $mimeType);
+            }
+            return $all;
         }
         return self::$mime_types[$ext] ?? [];
     }
