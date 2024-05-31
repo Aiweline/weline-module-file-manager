@@ -31,6 +31,12 @@ class File implements EavModelInterface
         ];
         $attrs['attr_code'] = $attrs['code'];
         unset($attrs['code']);
+        foreach ($attrs as $key => $attr) {
+            if (str_starts_with($key, 'file-')) {
+                $key = substr($key, 5);
+                $attrs[$key] = $attr;
+            }
+        }
         $attr    = array_merge($this->getModelData(), $defaults, $attrs);
         $id      = str_replace('#', '', $attr['target']);
         $title   = $attribute->getName();
@@ -58,16 +64,16 @@ class File implements EavModelInterface
         eval($res);
         $frontendAttrs = $type->getFrontendAttrs();
         $download      = '';
-        $value_str      = '';
+        $value_str     = '';
         if ($value) {
-            if(is_string($value)){
+            if (is_string($value)) {
                 $value = explode(',', $value);
             }
             if (!empty($value)) {
                 $download .= __('已选文件:');
             }
             foreach ($value as $item) {
-                if(empty($item)){
+                if (empty($item)) {
                     continue;
                 }
                 $file_name = basename($item);
