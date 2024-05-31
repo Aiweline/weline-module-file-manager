@@ -85,7 +85,7 @@ class File implements EavModelInterface
             'path' => 'media/uploader/',
             'title' => '从文件管理器选择',
             'multi' => '0',
-            'ext' => 'xls,xlsx',
+            'ext' => '*',
             'w' => '50',
             'h' => '50',
             'size' => '102400',
