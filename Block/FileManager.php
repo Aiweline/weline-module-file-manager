@@ -11,7 +11,7 @@ class FileManager extends Block
     public function render(): string
     {
         $value = $this->getParseVarsParams('value');
-        $this->assign('value', $value);
+        $this->assign('value', $value?:$this->getData('value'));
         $size_alias = Image::getSize($this->getData('size'));
         $value = $this->getData('value') ?: '';
         $this->assign('value_items', Image::processImagesValuePreviewData($value, $this->getData('width'), $this->getData('height')));
