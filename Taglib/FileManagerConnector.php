@@ -2,18 +2,14 @@
 
 namespace Weline\FileManager\Taglib;
 
-use Weline\Backend\Session\BackendSession;
+use Weline\Backend\Model\BackendUserConfig;
 use Weline\FileManager\Cache\FileManagerCacheFactory;
 use Weline\FileManager\FileManagerInterface;
-use Weline\FileManager\Model\BackendUserConfig;
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\MessageManager;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\System\File\Io\File;
 use Weline\Framework\System\File\Scan;
-use Weline\Framework\System\ModuleFileReader;
 use Weline\Taglib\TaglibInterface;
 
 class FileManagerConnector implements TaglibInterface

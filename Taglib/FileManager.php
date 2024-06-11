@@ -2,20 +2,15 @@
 
 namespace Weline\FileManager\Taglib;
 
-use Weline\Backend\Session\BackendSession;
+use Weline\Backend\Model\BackendUserConfig;
 use Weline\FileManager\Cache\FileManagerCacheFactory;
 use Weline\FileManager\FileManagerInterface;
-use Weline\FileManager\Model\BackendUserConfig;
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\MessageManager;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\System\File\Io\File;
 use Weline\Framework\System\File\Scan;
-use Weline\Framework\System\ModuleFileReader;
 use Weline\Taglib\TaglibInterface;
-use function PHPUnit\Framework\stringStartsWith;
 
 class FileManager implements TaglibInterface
 {
@@ -85,15 +80,15 @@ class FileManager implements TaglibInterface
             }
             $cacheKey = json_encode(func_get_args()) . $userConfigFileManager;
             /**@var CacheInterface $cache */
-            $cache = ObjectManager::getInstance(FileManagerCacheFactory::class);
+            $cache  = ObjectManager::getInstance(FileManagerCacheFactory::class);
             $result = $cache->get($cacheKey);
             if ($result and ($userConfigFileManager !== 'local')) {
                 return $result;
             }
             /**@var Scan $fileScan $ */
-            $fileScan = ObjectManager::getInstance(Scan::class);
+            $fileScan     = ObjectManager::getInstance(Scan::class);
             $fileManagers = [];
-            $modules = Env::getInstance()->getActiveModules();
+            $modules      = Env::getInstance()->getActiveModules();
             foreach ($modules as $module) {
                 $files = [];
                 $fileScan->globFile(
@@ -115,6 +110,7 @@ class FileManager implements TaglibInterface
             if (count($fileManagers) > 1 and $userConfigFileManager === 'local') {
                 /**@var \Weline\FileManager\FileManager $fileManager */
                 $fileManager = array_pop($fileManagers);
+                $userConfigFileManager = $fileManager::name();
             } else {
                 if (!isset($fileManagers[$userConfigFileManager])) {
                     ObjectManager::getInstance(MessageManager::class)->addWarning(__('所指定的文件管理器不存在! 文件管理器名：%1', $userConfigFileManager));
@@ -130,7 +126,7 @@ class FileManager implements TaglibInterface
             if (!isset($attributes['target'])) {
                 throw new \Exception(__('缺少目标ID。文档：%1', self::document()));
             }
-            if(str_starts_with($attributes['target'],'.')) {
+            if (str_starts_with($attributes['target'], '.')) {
                 throw new \Exception(__('缺少目标ID。请使用ID选择器，例如：target="#id"。文档：%1', self::document()));
             }
             $fileManager
@@ -145,9 +141,11 @@ class FileManager implements TaglibInterface
                 ->setSize($attributes['size'] ?? '102400')
                 ->setVars($attributes['vars'] ?? '');
             $result = $fileManager->setData(
-                ['tag_key' => $tag_key,
+                [
+                    'tag_key' => $tag_key,
                     'tag_data' => $tag_data,
-                    'attributes' => $attributes
+                    'attributes' => $attributes,
+                    'code' => $userConfigFileManager
                 ]
             )->render();
             $cache->set($cacheKey, $result);
