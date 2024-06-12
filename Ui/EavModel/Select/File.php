@@ -14,7 +14,7 @@ namespace Weline\FileManager\Ui\EavModel\Select;
 
 use Weline\Eav\EavModelInterface;
 use Weline\Eav\Model\EavAttribute;
-use Weline\FileManager\Model\BackendUserConfig;
+use Weline\Backend\Model\BackendUserConfig;
 use Weline\FileManager\Taglib\FileManager;
 use Weline\Framework\Manager\ObjectManager;
 
