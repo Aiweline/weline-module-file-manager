@@ -116,7 +116,15 @@
             }
             urls += imgs[i].getAttribute('data-src')
         }
-        $('#{{target}}').val(urls).trigger('change').trigger('input')
+        let targetEle = $('#{{target}}')
+        switch ('{{setAttr}}'){
+            case 'text':
+                targetEle.text(urls).trigger('change').trigger('input');
+                break;
+            default:
+                targetEle.val(urls).trigger('change').trigger('input');
+        }
+
     }
 
     flushSelectedImage()
