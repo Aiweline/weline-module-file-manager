@@ -98,4 +98,9 @@ class File implements EavModelInterface
             'code' => ObjectManager::getInstance(BackendUserConfig::class)->getConfig('file_manager')
         ];
     }
+
+    static function dependenceProcess(array $dependenceValue = []): mixed
+    {
+        return '';
+    }
 }
