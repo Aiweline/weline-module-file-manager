@@ -16,6 +16,7 @@ class FileManager extends Block
         $value = $this->getData('value') ?: '';
         $this->assign('value_items', Image::processImagesValuePreviewData($value, $this->getData('width'), $this->getData('height')));
         $this->assign('size_alias', $size_alias);
+        $this->assign('params', $this->getParams());
         return parent::render();
     }
 

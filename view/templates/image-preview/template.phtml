@@ -117,7 +117,7 @@
             urls += imgs[i].getAttribute('data-src')
         }
         let targetEle = $('#{{target}}')
-        switch ('{{setAttr}}'){
+        switch ('{{params.setAttr}}'){
             case 'text':
                 targetEle.text(urls).trigger('change').trigger('input');
                 break;

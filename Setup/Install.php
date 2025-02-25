@@ -2,8 +2,8 @@
 
 namespace Weline\FileManager\Setup;
 
+use Weline\Backend\Model\BackendUserConfig;
 use Weline\Eav\Model\EavAttribute\Type;
-use Weline\FileManager\Model\BackendUserConfig;
 use Weline\FileManager\Ui\EavModel\Select\File;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Manager\ObjectManager;

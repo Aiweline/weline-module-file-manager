@@ -40,6 +40,7 @@ class FileManager implements TaglibInterface
             'title' => true,
             'target' => true,
             'path' => true,
+            'setAttr' => false,
             'value' => true,
             'vars' => false,
             'ext' => true,
